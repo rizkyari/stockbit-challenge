@@ -5,8 +5,8 @@ const Home = () => {
     const id = 1;
     return(
         <div>
-            This is home page
-            <Link to={`/detail/${id}`}>click here</Link>
+            <div>This is home page</div>
+            <Link to={`/detail/${id}`}>go to detail</Link>
         </div>
     )
 }
