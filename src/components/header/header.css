@@ -16,3 +16,7 @@ nav{
 .active{
     border-bottom: 2px solid firebrick;
 }
+.title{
+    color: #fff;
+    font-size: 20px;
+}
