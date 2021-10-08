@@ -1,26 +1,43 @@
 import React,{useEffect,useState} from "react";
 import { connect } from "react-redux";
 import * as action from "../../redux/actions/action";
-import banner from "../../assets/movie-banner.jpeg"
+import banner from "../../assets/movie-banner.jpeg"; 
+import Modal from "../../components/modal/index";
 import './home.css';
+import { add_title } from "../../redux/type/type";
 
 const Home = (props) => {
     
-    const { getData, list, searchData } = props;
+    const { getData, list, searchData, pageNum, addPage, infiniteScroll, choosenId, imdb, getDetail, addTitle} = props;
     const[title, setTitle] = useState('');
+    const[page,setPage] = useState(1);
+    const[show, setShow] = useState(false);
+
     useEffect(() => {
         getData();
       },[]);
 
     const handleSubmit = () => {
         searchData(title);
+        addTitle(title);
     }  
 
-    const infiniteScroll = () => {
+    const openDetail = (i, imdbID) => {
+        setShow(true);
+        choosenId(imdbID);
+        getDetail(imdbID);
+    }
+
+    const getMoreData = () => {
         // End of the document reached?
         if (window.innerHeight + document.documentElement.scrollTop
         === document.documentElement.offsetHeight){
-         console.log('bottom already');
+            // let newPage = page++;
+        //  setPage(newPage);
+        addPage(1);
+        infiniteScroll();
+        // console.log(title, pageNum);
+        //  console.log(pageNum);
         //    let newPage = this.state.page;
         //    newPage++;
         //     this.setState({
@@ -31,7 +48,7 @@ const Home = (props) => {
         }
 
         useEffect(() =>{
-            window.addEventListener('scroll', infiniteScroll);
+            window.addEventListener('scroll', getMoreData);
         },[])
     return(
         <div>
@@ -55,7 +72,7 @@ const Home = (props) => {
                 {
                      list.length >= 1 ? list.map((item,index)=>(
                         <div key={index}>
-                            <div className="container-card">
+                            <div className="container-card" onClick={()=>openDetail(index, item.imdbID)}>
                                 <div className="flap">
                                     <div>{item.Title}</div>
                                 </div>
@@ -68,6 +85,7 @@ const Home = (props) => {
                 }
                 {list.Title}
             </div>
+            <Modal onClose={() => setShow(false)} show={show} imdb={imdb}/>
         </div>
     )
 }
@@ -75,6 +93,8 @@ const Home = (props) => {
 const mapStateToProps = (state) => {
     return {
         list: state.datas,
+        pageNum: state.page,
+        imdb : state.idx,
     };
   };
   
@@ -82,6 +102,11 @@ const mapStateToProps = (state) => {
   return{
       getData: () => dispatch(action.getData()),
       searchData: (title) => dispatch(action.searchData(title)),
+      addPage:(page) => dispatch(action.addPage(page)),
+      infiniteScroll: (title, page) => dispatch(action.infiniteScroll(title,page)),
+      choosenId: (id) => dispatch(action.choosenIndex(id)),
+      getDetail: (id) => dispatch(action.getDetail(id)),
+      addTitle: (title) => dispatch(action.addTitle(title)),
   }
   }
 

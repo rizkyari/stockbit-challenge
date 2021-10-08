@@ -38,5 +38,12 @@
 .container-card{
     margin: 20px;
     border: 1px black solid;
+    background-color: antiquewhite;
+    border-radius: 5px;
+    padding: 5px;
+    cursor: pointer;
+}
 
+.image-card{
+    height: 500px;
 }
